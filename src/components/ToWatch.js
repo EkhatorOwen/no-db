@@ -7,7 +7,7 @@ import swal from 'sweetalert';
 
 
 export default function ToWatch(props){
-console.log(props);
+//console.log(props);
     return(
 
         <Col sm="6">
@@ -16,7 +16,7 @@ console.log(props);
           <CardBody>
             <CardTitle>{props.title}</CardTitle>
             <CardText>{}</CardText>
-             <Button  outline color="danger" size="sm" onClick={() => props.remove(props.title,props.img,props.id)}>Remove</Button>{' '}
+             <Button  outline color="danger" size="sm" onClick={() => props.remove(props.id)}>Remove</Button>{' '}
              <br/>
     
           </CardBody>

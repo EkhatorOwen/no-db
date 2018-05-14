@@ -19,6 +19,7 @@ class Search extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.addToWatchList = this.addToWatchList.bind(this);
+    this.deleteToWatchList = this.deleteToWatchList.bind(this);
   }
 
   componentDidMount() {
@@ -53,6 +54,17 @@ class Search extends Component {
      // console.log(response);
       this.setState({ movies: response.data });
     });   
+  }
+
+  deleteToWatchList(id){
+     
+      axios.delete(`/api/movies/deleteToWatch/${id}`).then(response =>{
+
+       // console.log(response.data);
+        this.setState({toWatch: response.data});
+
+      })
+
   }
 
   render() {
@@ -90,7 +102,8 @@ class Search extends Component {
                 title={element.name}
                 img={element.img}
                 overview={element.overview}
-                id={element.id}              
+                id={element.id} 
+                remove={this.deleteToWatchList}             
              />)
 
     })

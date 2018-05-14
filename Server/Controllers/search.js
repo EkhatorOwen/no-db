@@ -73,11 +73,11 @@ module.exports = {
     },
 
     deleteToWatch(req,res){
-
+            
             const deleteId = req.params.id;
-             movieIndex = toWatch.findIndex(movie => movie.id == deleteId);
-             toWatch.splice(movieIndex,1);
-             res.status(200).send(toWatch);
+              movieIndex = toWatch.findIndex(movie => movie.id == deleteId);
+              toWatch.splice(movieIndex,1);
+            res.status(200).send(toWatch);
     },
 
     updateNowShowing(req,res){
