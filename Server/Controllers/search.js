@@ -48,41 +48,44 @@ module.exports = {
                     delete element.backdrop_path;
                     delete element.adult;
                   //  delete element.overview;
-                    element.id = index;                 
-                    nowShowingMovies.push(element);  
-
-                    // const newArr = myArrOfObjects.map(val => ({ title: val.title, img: val.poster_path, id: id }))
+                    element.id = index; 
+                    nowShowingMovies.push(element); 
+               
             })
            
              res.status(200).send(nowShowingMovies);
             })
             .catch(console.log)
-//     },
-//     updateWatched(req, res){ 
-//         const {} =req.body;
-
 
     },
-    createToWatch(req,res){
+    createToWatch(req,res){ 
             
-        for(let i =0; i<toWatch.length; i++){
-                if(toWatch[i].name==req.body.movie.name){
-                        console.log('false')
-                        res.status(200).send(false);//use toastify here
-                        return;
-                }
-               
-        }
-           toWatch.push(req.body.movie);        
-           res.status(200).send(toWatch);
+          toWatch.push(req.body.movie);   
+           const deleteId = req.body.movie.id;
+    
+         nowShowingMovies.map((element,index)=>{
+                 if(element.id==deleteId){
+                   let test = nowShowingMovies.splice(index,1);
+                 
+                 }
+         })
+           res.status(200).send(toWatch); 
+    },
 
-           
-     
+    deleteToWatch(req,res){
+
+            const deleteId = req.params.id;
+             movieIndex = toWatch.findIndex(movie => movie.id == deleteId);
+             toWatch.splice(movieIndex,1);
+             res.status(200).send(toWatch);
+    },
+
+    updateNowShowing(req,res){
+
+        res.status(200).send(nowShowingMovies);
+
     }
+
 }
 
-// axios.get(`https://api.themoviedb.org/3/search/movie?api_key=c6ec8af34a4f2f2c72b1b18b31540c8e&language=en-US&query=captainamerica&page=1&include_adult=false`)
-
-
-//axios.get("/api/movies/?  name=captain")
 
