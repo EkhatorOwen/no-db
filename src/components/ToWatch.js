@@ -1,27 +1,58 @@
-import React from 'react';
-
-import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button, Col } from 'reactstrap';
+import React, {Component} from 'react';
+import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button, Col, Input, Label } from 'reactstrap';
 import axios from 'axios';
 import swal from 'sweetalert';
+import Notes from './notes';
+
+export default class ToWatch extends Component{
+
+  constructor(){
+    super();
+    this.state={
+      note: ''
+    }
+    this.updateChange = this.updateChange.bind(this);
+  }
+
+  updateChange(e){
+    this.setState({note: e.target.value})
+  }
 
 
+render(){
 
-export default function ToWatch(props){
-//console.log(props);
+    let display = this.props.notes.map((element,index)=>{
+     //console.log(element);
+     return( <Notes
+      key={index}
+     title={this.props.title}
+      note={element.note}
+      />)
+    })
+
     return(
-
-        <Col sm="6">
+      <div>
+        <Col sm="7">
         <Card>
-          <CardImg width="50%" src={`https://image.tmdb.org/t/p/w154/${props.img}`} alt="Card image cap" />
+          <CardImg width="50%" src={`https://image.tmdb.org/t/p/w342/${this.props.img}`} alt="Card image cap" />
           <CardBody>
-            <CardTitle>{props.title}</CardTitle>
+            <CardTitle>{this.props.title}</CardTitle>
             <CardText>{}</CardText>
-             <Button  outline color="danger" size="sm" onClick={() => props.remove(props.id)}>Remove</Button>{' '}
+            <Label for="exampleText"></Label>
+             <Input onChange={this.updateChange} placeholder="Make a note" type="textarea" name="text" id="exampleText" />
+             <Button outline onClick={()=>this.props.updateNote(this.props.id,this.state.note)} color="secondary">Update</Button>
+           
+             <Button  outline color="danger" size="sm" onClick={() => this.props.remove(this.props.id)}>Remove</Button>{' '}
              <br/>
     
           </CardBody>
         </Card>
       </Col>
-
+      <Col sm="5">
+        {display}
+      </Col>
+      </div>
     );
 }
+}
+

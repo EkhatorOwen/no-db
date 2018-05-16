@@ -1,11 +1,12 @@
 const axios = require ("axios");
 var removeDuplicates = require('removeDuplicates');
 
-
+//sm6xqxfqjyw4q8m7ue9khzwg fandango api
 let nowShowingMovies = [];
 let watched = [];
 let toWatch = [];
 let searched = [];
+let notesArray = [];
 
 
 module.exports = {
@@ -50,9 +51,10 @@ module.exports = {
                   //  delete element.overview;
                     element.id = index; 
                     nowShowingMovies.push(element); 
+
                
             })
-           
+          //  console.log(nowShowingMovies);
              res.status(200).send(nowShowingMovies);
             })
             .catch(console.log)
@@ -73,7 +75,7 @@ module.exports = {
     },
 
     deleteToWatch(req,res){
-            
+
             const deleteId = req.params.id;
               movieIndex = toWatch.findIndex(movie => movie.id == deleteId);
               toWatch.splice(movieIndex,1);
@@ -84,8 +86,35 @@ module.exports = {
 
         res.status(200).send(nowShowingMovies);
 
-    }
+    },
 
+    updateNote(req, res){
+        const updateId = req.params.id;
+        notesIndex = notesArray.findIndex(notes=> notes.id==updateId);
+    
+        if(notesIndex===-1){            
+         notes={
+                 id: req.params.id,
+                 note: req.body.text
+                }
+          notesArray.push(notes);  
+          res.status(200).send(notesArray);
+          return     
+        }
+
+        let actualNote = notesArray[notesIndex];
+
+       
+
+        actualNote.id =req.params.id;
+        actualNote.note = req.body.text || actualNote.note;
+
+         res.status(200).send(notesArray);
+    },
+
+    showToWatch(req,res){
+        res.status(200).send(toWatch);
+    },
 }
 
 
