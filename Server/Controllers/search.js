@@ -1,3 +1,5 @@
+
+
 const axios = require ("axios");
 var removeDuplicates = require('removeDuplicates');
 
@@ -11,7 +13,7 @@ let notesArray = [];
 
 module.exports = {
     getMovies(req, res){    
-            axios.get(`https://api.themoviedb.org/3/search/movie?api_key=c6ec8af34a4f2f2c72b1b18b31540c8e&language=en-US&query=${req.query.query}&page=1&include_adult=false`).then(({data})=>{
+            axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.key}&language=en-US&query=${req.query.query}&page=1&include_adult=false`).then(({data})=>{
          
             
                 const {results} = data;

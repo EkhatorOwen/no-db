@@ -1,58 +1,111 @@
-import React, {Component} from 'react';
-import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button, Col, Input, Label } from 'reactstrap';
-import axios from 'axios';
-import swal from 'sweetalert';
-import Notes from './notes';
+require("dotenv").config();
 
-export default class ToWatch extends Component{
+const express = require("express");
+const { json } = require("body-parser");
+const session = require("express-session");
+const passport = require("passport");
+const cors = require("cors");
+const massive = require("massive");
+const Auth0Strategy = require("passport-auth0");
 
-  constructor(){
-    super();
-    this.state={
-      note: ''
-    }
-    this.updateChange = this.updateChange.bind(this);
-  }
+const { logout, getUser } = require("./controllers/authCtrl");
+const { saveTeamLead, getProjects } = require("./controllers/teamLeadCtrl");
+const port = 3001;
 
-  updateChange(e){
-    this.setState({note: e.target.value})
-  }
+const app = express();
 
+massive(process.env.CONNECTION_STRING)
+    .then(db => app.set("db", db))
+    .catch(console.log);
 
-render(){
+app.use(json());
+app.use(cors());
 
-    let display = this.props.notes.map((element,index)=>{
-     //console.log(element);
-     return( <Notes
-      key={index}
-     title={this.props.title}
-      note={element.note}
-      />)
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 24 * 60 * 60 * 60
+        }
     })
+);
 
-    return(
-      <div>
-        <Col sm="7">
-        <Card>
-          <CardImg width="50%" src={`https://image.tmdb.org/t/p/w342/${this.props.img}`} alt="Card image cap" />
-          <CardBody>
-            <CardTitle>{this.props.title}</CardTitle>
-            <CardText>{}</CardText>
-            <Label for="exampleText"></Label>
-             <Input onChange={this.updateChange} placeholder="Make a note" type="textarea" name="text" id="exampleText" />
-             <Button outline onClick={()=>this.props.updateNote(this.props.id,this.state.note)} color="secondary">Update</Button>
-           
-             <Button  outline color="danger" size="sm" onClick={() => this.props.remove(this.props.id)}>Remove</Button>{' '}
-             <br/>
-    
-          </CardBody>
-        </Card>
-      </Col>
-      <Col sm="5">
-        {display}
-      </Col>
-      </div>
-    );
-}
-}
+app.use(passport.initialize());
+app.use(passport.session());
 
+passport.serializeUser((user, done) => {
+    // console.log("user  ", user);
+    return done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+    // console.log("dese" + user);
+    return done(null, user);
+});
+
+passport.use(
+    new Auth0Strategy(
+        {
+            domain: process.env.DOMAIN,
+            clientID: process.env.CLIENT_ID,
+            clientSecret: process.env.CLIENT_SECRET,
+            callbackURL: "/login",
+            scope: "openid profile email"
+        },
+        (accessToken, refreshToken, extraParams, profile, done) => {
+            // console.log("Profile  ", profile);
+            return done(null, profile);
+        }
+    )
+);
+
+app.get(
+    "/login",
+    passport.authenticate("auth0"),
+    function(req, res) {
+        const { user } = req;
+        const db = app.get("db");
+        db
+            .getUserByAuthid(user.id)
+            .then(resp => {
+                    if (!resp[0]) {
+                        db
+                            .addUserByAuthid([
+                                user.name.givenName,
+                                user.displayName,
+                                user.emails[0].value,
+                                user.id,
+                                user.picture
+                            ])
+                            .then(response => {
+                                //console.log(response[0]);
+                                req.session.user = response[0];
+                                res.redirect("http://localhost:3000/#/setup/step1");
+                            })
+                            .catch(console.log);
+                    } else {
+                        console.log('user id is from sql is  ',resp[0])
+                        res.redirect("http://localhost:3000/#/dashboard/viewproject");
+                    }
+                }
+            )
+
+
+        app.get("api/projects", getProjects);
+
+//app.get("/api/me", getUser);
+
+        app.get("/api/test", (req, res) => {
+            res.status(200).json(req.user);
+        });
+        app.get("/logout", logout);
+
+        app.get("/api/profile", getUser);
+
+        app.post("/api/teamlead", saveTeamLead);
+
+        app.listen(port, () => {
+            console.log(`Listening on port: ${port}`);
+        });
