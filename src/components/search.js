@@ -14,15 +14,12 @@ class Search extends Component {
       userInput: "",
       overview: [],
       movies: [],
-      toWatch: [],
-      notes: []
+      toWatch: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.addToWatchList = this.addToWatchList.bind(this);
     this.deleteToWatchList = this.deleteToWatchList.bind(this);
-   
-    this.updateNote = this.updateNote.bind(this);
   }
 
   componentDidMount() {
@@ -30,9 +27,6 @@ class Search extends Component {
           this.setState({ movies: response.data });
          // console.log(response.data)
     });
-    // axios.get('/api/movies/showToWatch').then(response=>{
-    //     this.setState({toWatch: response.data})
-    // })
   }
 
   handleChange(e) {
@@ -68,17 +62,10 @@ class Search extends Component {
 
        // console.log(response.data);
         this.setState({toWatch: response.data});
+
       })
+
   }
-
-  updateNote(id,text){
-    axios.put(`/api/movies/note/${id}`,{text}).then(response=>{
-        this.setState({notes: response.data})
-        console.log(response.data);
-    })
-  }
-
-
 
   render() {
     
@@ -101,7 +88,6 @@ class Search extends Component {
                 img={element.poster_path}
                 overview={element.overview}
                 id={element.id}
-                releaseDate={element.release_date}
                 addToWatchList={this.addToWatchList}
               />
             );
@@ -117,9 +103,7 @@ class Search extends Component {
                 img={element.img}
                 overview={element.overview}
                 id={element.id} 
-                remove={this.deleteToWatchList} 
-                notes={this.state.notes}
-                updateNote={this.updateNote}            
+                remove={this.deleteToWatchList}             
              />)
 
     })
@@ -127,7 +111,7 @@ class Search extends Component {
       <Container>
         <div className="search">
           <InputGroup>
-        <Input onChange={this.handleChange} placeholder="Search from the displayed movies" />
+        <Input onChange={this.handleChange} placeholder="Search for a now showing" />
         <InputGroupAddon addonType="append"><button onClick={this.handleClick}>Search</button></InputGroupAddon>
       </InputGroup>
           <br/>

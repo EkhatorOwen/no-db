@@ -10,17 +10,18 @@ export default class  Box extends Component {
   constructor(){
     super()
       this.moreInfo = this.moreInfo.bind(this);
-  }
 
-  moreInfo(){ 
-    swal("More Info",`${this.props.overview}\n Relase Date: ${this.props.releaseDate}`)
-  }
 
+  }
+  moreInfo(){
+   
+    swal("More Info",this.props.overview)
+  }
     render(){
 return (                                                        
-    <Col sm="4">
+    <Col sm="3">
     <Card>
-      <CardImg width="50%" src={`https://image.tmdb.org/t/p/w342/${this.props.img}`} alt="Card image cap" />
+      <CardImg width="50%" src={`https://image.tmdb.org/t/p/w154/${this.props.img}`} alt="Card image cap" />
       <CardBody>
         <CardTitle>{this.props.title}</CardTitle>
         <CardText>{}</CardText>
