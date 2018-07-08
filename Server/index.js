@@ -5,7 +5,7 @@ const express = require("express"),
       port = process.env.PORT || 3001,
       cors = require("cors"),
       { json } = require("body-parser")
-      s = require(`${__dirname}/controllers/search`)
+      s = require(`${__dirname}/controllers/search.js`)
     
 
       app.use(express.static(`${__dirname}/../build`))
