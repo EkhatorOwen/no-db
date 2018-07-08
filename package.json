@@ -26,9 +26,5 @@
     "eject": "react-scripts eject",
     "cypress": "cypress open"
   },
-  "proxy": "http://localhost:3001",
-  "engines": {
-    "node": "10.1.0",
-    "npm": "6.1.0"
-  }
+  "proxy": "http://localhost:3001"
 }
