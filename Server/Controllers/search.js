@@ -1,7 +1,9 @@
 
 
 const axios = require ("axios");
-var removeDuplicates = require('removeDuplicates');
+
+const _ = require('lodash')
+
 
 
 let nowShowingMovies = [];
@@ -16,46 +18,56 @@ module.exports = {
          
             
                 const {results} = data;
-                results.map((element,index,arr)=>{                   
-                         delete element.video;
-                         delete element.vote_count;
-                         delete element.vote_average;
-                         delete element.vote;
-                         delete element.popularity;
-                         delete element.original_language;
-                         delete element.original_title;
-                         delete element.genre_ids;
-                         delete element.backdrop_path;
-                         delete element.adult;
-                         delete element.overview;
-                         element.id = index;                 
-                         searched.push(element);  
-                 })
-                  res.status(200).send(searched);
+              
+
+                // results.map((element,index,arr)=>{                   
+                //          delete element.video;
+                //          delete element.vote_count;
+                //          delete element.vote_average;
+                //          delete element.vote;
+                //          delete element.popularity;
+                //          delete element.original_language;
+                //          delete element.original_title;
+                //          delete element.genre_ids;
+                //          delete element.backdrop_path;
+                //          delete element.adult;
+                //          delete element.overview;
+                //          element.id = index; 
+                        
+                       
+                //          searched.push(element);  
+                //  })
+                //   res.status(200).send(searched);
             })
     },
 
     getNowShowing(req, res){
             axios.get(`https://api.themoviedb.org/3/movie/now_playing?api_key=c6ec8af34a4f2f2c72b1b18b31540c8e&language=en-US&page=1`).then(({data})=>{ 
             const {results} = data;
-           results.map((element,index,arr)=>{                   
-                    delete element.video;
-                    delete element.vote_count;
-                    delete element.vote_average;
-                    delete element.vote;
-                    delete element.popularity;
-                    delete element.original_language;
-                    delete element.original_title;
-                    delete element.genre_ids;
-                    delete element.backdrop_path;
-                    delete element.adult;
-                  //  delete element.overview;
-                    element.id = index; 
-                    nowShowingMovies.push(element); 
+
+           
+
+           results.forEach((element,index,arr)=>{     
+                   
+                if(!nowShowingMovies.includes(element)){
+
+                        nowShowingMovies.push({
+                                id: element.id,
+                                title: element.title,
+                                poster_path: element.poster_path,
+                                overview:element.overview,
+                                id: element.id
+                        }); 
+                }
+             
                
             })
+
+            let newArr = _.uniqBy(nowShowingMovies,(element)=>{
+                    return element.id;
+            })
            
-             res.status(200).send(nowShowingMovies);
+             res.status(200).send(newArr);
             })
             .catch(console.log)
 
