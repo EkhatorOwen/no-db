@@ -1,9 +1,12 @@
 const express = require("express"),
-  app = express(),
-  port = process.env.PORT || 3001,
-  cors = require("cors"),
-  { json } = require("body-parser")
-  s = require("./controllers/search");
+      app = express(),
+      port = process.env.PORT || 3001,
+      cors = require("cors"),
+      { json } = require("body-parser")
+      s = require(`${__dirname}/controllers/search`)
+    
+
+      app.use(express.static(`${__dirname}/../build`))
 
 app.use(json());
 app.use(cors());
@@ -18,6 +21,10 @@ app.get("/api/movies/updateNowshowing", s.updateNowShowing);
  //app.delete(`/api/movies/watched/:id`,s.deleteWatched)
 // app.put(`/api/movies/notWatched/:id`,s.createNotWatched)
 // app.put(`/api/movies/Watched/:id`,s.createWatched)
+
+app.get('*',(req,res)=>{
+    res.sendFile(path.join(__dirname,'../build/index.html'))
+  })
 
 app.listen(port, () =>
   console.log(`I'm listening on port: ${port}`)

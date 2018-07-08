@@ -7,12 +7,14 @@
     "body-parser": "^1.18.2",
     "bootstrap": "^4.1.1",
     "cors": "^2.8.4",
+    "cypress": "^3.0.2",
     "express": "^4.16.3",
     "material-ui": "^0.20.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-scripts": "1.1.4",
     "reactstrap": "^6.0.1",
+    "redis": "^2.8.0",
     "removeduplicates": "^1.1.0",
     "sweetalert": "^2.1.0"
   },
@@ -20,7 +22,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress": "cypress open"
   },
   "proxy": "http://localhost:3001"
 }
