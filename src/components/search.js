@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import Box from "./box";
 import { InputGroup,InputGroupAddon,InputGroupText,Input,Row,Container,Col} from "reactstrap";
-import removeDuplicates from "removeduplicates";
+
 import ToWatch from "./ToWatch"
 
 
@@ -24,8 +24,8 @@ class Search extends Component {
 
   componentDidMount() {
       axios.get("/api/movies/nowshowing").then(response => {
-          this.setState({ movies: response.data });
-         // console.log(response.data)
+
+          this.setState({movies:response.data})
     });
   }
 
